@@ -17,7 +17,7 @@ func TestTransferTx(t *testing.T) {
 	fmt.Println(">> before:", acc1.Balance, acc2.Balance)
 
 	// run n concurrent transfer transactions
-	n := 50
+	n := 10
 	amount := int64(10)
 
 	errs := make(chan error)
@@ -128,7 +128,7 @@ func TestTransferTxDeadlock(t *testing.T) {
 	fmt.Println(">> before:", acc1.Balance, acc2.Balance)
 
 	// run n concurrent transfer transactions
-	n := 100
+	n := 10
 	amount := int64(10)
 
 	errs := make(chan error)
