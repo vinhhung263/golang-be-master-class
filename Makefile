@@ -68,3 +68,8 @@ redis:
 	docker run --name redis -p 6379:6379 -d redis:7-alpine
 
 .PHONY: network postgres createdb dropdb migrateup migratedown migrateup1 migratedown1 new_migration db_docs db_schema sqlc test server mock proto evans redis
+
+docker-build-image:
+	docker network create bank-network
+	docker network connect bank-network golang-simple-bank-postgres-1
+	docker run --name simplebank --network bank-network -p 8080:8080 -e GIN_MODE=release -e DB_SOURCE="postgresql://root:secret@golang-simple-bank-postgres-1:5432/simple_bank?sslmode=disable" simplebank:latest
