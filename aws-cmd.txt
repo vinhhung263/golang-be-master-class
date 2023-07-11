@@ -2,3 +2,6 @@ aws configure
 aws secretsmanager get-secret-value --secret-id simple_bank
 aws secretsmanager get-secret-value --secret-id simple_bank --query SecretString
 aws secretsmanager get-secret-value --secret-id simple_bank --query SecretString --output text | jq -r 'to_entries|map("\(.key)=\(.value)")|.[]' > app.env
+
+aws ecr get-login-password | docker login --username AWS --password-stdin 085214222703.dkr.ecr.ap-southeast-1.amazonaws.com
+docker pull 085214222703.dkr.ecr.ap-southeast-1.amazonaws.com/simplebank:81fa4562153d88d4c3edc1b696600c3ac60e3c39
