@@ -5,3 +5,12 @@ aws secretsmanager get-secret-value --secret-id simple_bank --query SecretString
 
 aws ecr get-login-password | docker login --username AWS --password-stdin 085214222703.dkr.ecr.ap-southeast-1.amazonaws.com
 docker pull 085214222703.dkr.ecr.ap-southeast-1.amazonaws.com/simplebank:81fa4562153d88d4c3edc1b696600c3ac60e3c39
+
+kubectl cluster-info
+aws eks update-kubeconfig --name simple-bank --region ap-southeast-1
+
+minikube image load <image name> : push local image to minikube
+
+Create External ip
+https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/
+minikube service <service-name> --url
