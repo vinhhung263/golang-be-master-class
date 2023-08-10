@@ -8,6 +8,7 @@ package db
 import (
 	"context"
 	"database/sql"
+	"fmt"
 )
 
 const createUser = `-- name: CreateUser :one
@@ -36,6 +37,7 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 		arg.Email,
 	)
 	var i User
+	fmt.Sprint("111111111111111111111111111111111111111111")
 	err := row.Scan(
 		&i.Username,
 		&i.HashedPassword,
