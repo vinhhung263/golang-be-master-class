@@ -6,6 +6,7 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/hibiken/asynq"
@@ -17,6 +18,7 @@ import (
 	db "github.com/vinhhung263/simplebank/db/sqlc"
 	_ "github.com/vinhhung263/simplebank/doc/statik"
 	"github.com/vinhhung263/simplebank/gapi"
+	"github.com/vinhhung263/simplebank/mail"
 	"github.com/vinhhung263/simplebank/pb"
 	"github.com/vinhhung263/simplebank/util"
 	"github.com/vinhhung263/simplebank/worker"
@@ -32,7 +34,7 @@ func main() {
 	}
 
 	if config.Environment == "development" {
-		log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
+		log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr, TimeFormat: time.DateTime})
 	}
 
 	conn, err := sql.Open(config.DBDriver, config.DBSource)
@@ -47,7 +49,7 @@ func main() {
 	}
 
 	taskDistributor := worker.NewRedisTaskDistributor(redisOpt)
-	go runTaskProcessor(redisOpt, store)
+	go runTaskProcessor(config, redisOpt, store)
 	go runGatewayServer(config, store, taskDistributor)
 	runGrpcServer(config, store, taskDistributor)
 }
@@ -135,8 +137,9 @@ func runGatewayServer(config util.Config, store db.Store, taskDistributor worker
 	}
 }
 
-func runTaskProcessor(redisOpt asynq.RedisClientOpt, store db.Store) {
-	taskProcessor := worker.NewRedisTaskProcessor(redisOpt, store)
+func runTaskProcessor(config util.Config, redisOpt asynq.RedisClientOpt, store db.Store) {
+	mailer := mail.NewGmailSender(config.EmailSenderName, config.EmailSenderAddress, config.EmailSenderPassword)
+	taskProcessor := worker.NewRedisTaskProcessor(redisOpt, store, mailer)
 	log.Info().Msg("start redis task processor")
 	err := taskProcessor.Start()
 	if err != nil {
