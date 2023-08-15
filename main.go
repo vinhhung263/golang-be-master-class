@@ -5,14 +5,11 @@ import (
 	"database/sql"
 	"net"
 	"net/http"
-	"os"
-	"time"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/hibiken/asynq"
 	_ "github.com/lib/pq"
 	"github.com/rakyll/statik/fs"
-	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"github.com/vinhhung263/simplebank/api"
 	db "github.com/vinhhung263/simplebank/db/sqlc"
@@ -34,7 +31,7 @@ func main() {
 	}
 
 	if config.Environment == "development" {
-		log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr, TimeFormat: time.DateTime})
+		// log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr, TimeFormat: time.DateTime})
 	}
 
 	conn, err := sql.Open(config.DBDriver, config.DBSource)
