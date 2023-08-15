@@ -9,3 +9,6 @@ Tạo query trong ./query
 -> make sqlc
 Update file ./sqlc/store.go
 -> make mock
+
+*** Src ***
+https://github.com/techschool/simplebank/tree/master
